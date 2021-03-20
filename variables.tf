@@ -13,6 +13,6 @@ variable "path" {
 }
 
 variable "urls_prefix" {
-  type = list(string)
+  type = set(string)
   default = []
 }
