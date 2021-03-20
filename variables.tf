@@ -11,3 +11,8 @@ variable "path" {
   type = string
   default = ""
 }
+
+variable "urls_prefix" {
+  type = list(string)
+  default = []
+}
