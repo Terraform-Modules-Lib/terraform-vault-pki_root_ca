@@ -34,10 +34,8 @@ resource "vault_pki_secret_backend_root_cert" "this" {
 resource "vault_pki_secret_backend_config_urls" "this" {
   depends_on = [vault_pki_secret_backend_root_cert.this]
   
-  for_each = local.urls_prefix
-  
   backend = vault_pki_secret_backend_root_cert.this.backend
   
-  issuing_certificates = ["${each.value}/v1/${vault_mount.this.path}/ca"]
-  crl_distribution_points = ["${each.value}/v1/${vault_mount.this.path}/crl"]
+  issuing_certificates = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/ca" ])
+  crl_distribution_points = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/crl"]
 }
