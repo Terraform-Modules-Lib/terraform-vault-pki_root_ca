@@ -9,14 +9,22 @@ terraform {
   }
 }
 
+locals {
+  path = coalesce(var.path, var.name)
+  description = coalesce(var.description, "${var.name} Certificate Authority")
+  urls_prefix = var.urls_prefix
+}
+
 resource "vault_mount" "this" {
   type = "pki"
   
-  path = coalesce(var.path, var.name)
-  description = coalesce(var.description, "${var.name} Certificate Authority")
+  path = local.path
+  description = local.description
 }
 
 resource "vault_pki_secret_backend_root_cert" "this" {
+  depends_on = [vault_mount.this]
+  
   backend = vault_mount.this.path
   
   type = "internal"
@@ -24,8 +32,9 @@ resource "vault_pki_secret_backend_root_cert" "this" {
 }
 
 resource "vault_pki_secret_backend_config_urls" "this" {
-  for_each = var.urls_prefix
   depends_on = [vault_pki_secret_backend_root_cert.this]
+  
+  for_each = local.urls_prefix
   
   backend = vault_pki_secret_backend_root_cert.this.backend
   
