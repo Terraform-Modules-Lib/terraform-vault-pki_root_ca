@@ -36,6 +36,6 @@ resource "vault_pki_secret_backend_config_urls" "this" {
   
   backend = vault_pki_secret_backend_root_cert.this.backend
   
-  issuing_certificates = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/ca" ])
-  crl_distribution_points = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/crl"]
+  #issuing_certificates = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/ca" ])
+  #crl_distribution_points = toset([ for url in local.urls_prefix: "${url}/v1/${vault_mount.this.path}/crl"]
 }
